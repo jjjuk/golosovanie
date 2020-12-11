@@ -8,8 +8,14 @@ export const Subscription = subscriptionType({
       resolve: (pollPromise: any) => pollPromise,
     })
 
+    t.field('feed', {
+      type: 'Feed',
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator('FEED'),
+      resolve: (feedPromise: any) => feedPromise,
+    })
+
     t.field('newVotes', {
-      type: 'Vote',
+      type: 'Int',
       args: {
         pollId: nonNull(intArg())
       },

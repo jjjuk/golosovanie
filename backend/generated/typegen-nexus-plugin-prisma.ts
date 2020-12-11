@@ -17,6 +17,7 @@ interface PrismaModels {
   User: Prisma.User
   Poll: Prisma.Poll
   EventName: Prisma.EventName
+  EventStartTime: Prisma.EventStartTime
   Event: Prisma.Event
   Vote: Prisma.Vote
   Participant: Prisma.Participant
@@ -27,20 +28,24 @@ interface PrismaModels {
 interface NexusPrismaInputs {
   Query: {
     users: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'color' | 'password' | 'online' | 'Poll' | 'Vote' | 'Participant' | 'Feed'
-      ordering: 'id' | 'name' | 'color' | 'password' | 'online'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'password' | 'events' | 'Poll' | 'Vote' | 'Feed'
+      ordering: 'id' | 'name' | 'password'
     }
     polls: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes' | 'events'
       ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime'
     }
     eventNames: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'events'
-      ordering: 'id' | 'name'
+      filtering: 'AND' | 'OR' | 'NOT' | 'name' | 'events'
+      ordering: 'name'
+    }
+    eventStartTimes: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'startTime' | 'events'
+      ordering: 'startTime'
     }
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'approved' | 'startTime' | 'Vote' | 'Participant'
-      ordering: 'id' | 'name' | 'approved' | 'startTime'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
     votes: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
@@ -56,17 +61,17 @@ interface NexusPrismaInputs {
     }
   },
   User: {
+    events: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'userId' | 'user' | 'eventId' | 'event'
+      ordering: 'id' | 'userId' | 'eventId'
+    }
     Poll: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes' | 'events'
       ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime'
     }
     Vote: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
       ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
-    }
-    Participant: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'userId' | 'user' | 'eventId' | 'event'
-      ordering: 'id' | 'userId' | 'eventId'
     }
     Feed: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'userId' | 'user' | 'action' | 'time'
@@ -78,21 +83,31 @@ interface NexusPrismaInputs {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
       ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
     }
+    events: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
+    }
   }
   EventName: {
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'approved' | 'startTime' | 'Vote' | 'Participant'
-      ordering: 'id' | 'name' | 'approved' | 'startTime'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
+    }
+  }
+  EventStartTime: {
+    events: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
   }
   Event: {
-    Vote: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
-      ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
-    }
-    Participant: {
+    paticipants: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'userId' | 'user' | 'eventId' | 'event'
       ordering: 'id' | 'userId' | 'eventId'
+    }
+    votes: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
+      ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
     }
   }
   Vote: {
@@ -115,6 +130,8 @@ interface NexusPrismaOutputs {
     polls: 'Poll'
     eventName: 'EventName'
     eventNames: 'EventName'
+    eventStartTime: 'EventStartTime'
+    eventStartTimes: 'EventStartTime'
     event: 'Event'
     events: 'Event'
     vote: 'Vote'
@@ -143,6 +160,12 @@ interface NexusPrismaOutputs {
     deleteOneEventName: 'EventName'
     deleteManyEventName: 'BatchPayload'
     upsertOneEventName: 'EventName'
+    createOneEventStartTime: 'EventStartTime'
+    updateOneEventStartTime: 'EventStartTime'
+    updateManyEventStartTime: 'BatchPayload'
+    deleteOneEventStartTime: 'EventStartTime'
+    deleteManyEventStartTime: 'BatchPayload'
+    upsertOneEventStartTime: 'EventStartTime'
     createOneEvent: 'Event'
     updateOneEvent: 'Event'
     updateManyEvent: 'BatchPayload'
@@ -171,12 +194,10 @@ interface NexusPrismaOutputs {
   User: {
     id: 'Int'
     name: 'String'
-    color: 'String'
     password: 'String'
-    online: 'Boolean'
+    events: 'Participant'
     Poll: 'Poll'
     Vote: 'Vote'
-    Participant: 'Participant'
     Feed: 'Feed'
   }
   Poll: {
@@ -189,20 +210,27 @@ interface NexusPrismaOutputs {
     firstStageTime: 'String'
     secondStageTime: 'String'
     votes: 'Vote'
+    events: 'Event'
   }
   EventName: {
-    id: 'Int'
     name: 'String'
+    events: 'Event'
+  }
+  EventStartTime: {
+    startTime: 'String'
     events: 'Event'
   }
   Event: {
     id: 'Int'
     name: 'String'
     eventName: 'EventName'
-    approved: 'Boolean'
     startTime: 'String'
-    Vote: 'Vote'
-    Participant: 'Participant'
+    eventStartTime: 'EventStartTime'
+    pollId: 'Int'
+    poll: 'Poll'
+    approved: 'Boolean'
+    paticipants: 'Participant'
+    votes: 'Vote'
   }
   Vote: {
     id: 'Int'
@@ -235,6 +263,7 @@ interface NexusPrismaMethods {
   User: Typegen.NexusPrismaFields<'User'>
   Poll: Typegen.NexusPrismaFields<'Poll'>
   EventName: Typegen.NexusPrismaFields<'EventName'>
+  EventStartTime: Typegen.NexusPrismaFields<'EventStartTime'>
   Event: Typegen.NexusPrismaFields<'Event'>
   Vote: Typegen.NexusPrismaFields<'Vote'>
   Participant: Typegen.NexusPrismaFields<'Participant'>

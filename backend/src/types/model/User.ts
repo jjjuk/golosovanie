@@ -5,7 +5,7 @@ export const User = objectType({
   definition(t) {
     t.model.id()
     t.model.name()
-    t.model.password()    
-    t.model.online()
+    t.model.password()
+    // t.model.events()    
   }
 })

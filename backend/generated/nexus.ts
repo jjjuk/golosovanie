@@ -19,6 +19,23 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  EventWhereUniqueInput: { // input type
+    id?: number | null; // Int
+    unique_event?: NexusGenInputs['Unique_eventCompoundUniqueInput'] | null; // Unique_eventCompoundUniqueInput
+  }
+  Unique_eventCompoundUniqueInput: { // input type
+    name: string; // String!
+    pollId: number; // Int!
+    startTime: string; // String!
+  }
+  Unique_voteCompoundUniqueInput: { // input type
+    pollId: number; // Int!
+    userId: number; // Int!
+  }
+  VoteWhereUniqueInput: { // input type
+    id?: number | null; // Int
+    unique_vote?: NexusGenInputs['Unique_voteCompoundUniqueInput'] | null; // Unique_voteCompoundUniqueInput
+  }
 }
 
 export interface NexusGenEnums {
@@ -41,7 +58,20 @@ export interface NexusGenObjects {
     approved: boolean; // Boolean!
     id: number; // Int!
     name: string; // String!
+    pollId: number; // Int!
     startTime: string; // String!
+  }
+  EventName: { // root type
+    name: string; // String!
+  }
+  EventStartTime: { // root type
+    startTime: string; // String!
+  }
+  Feed: { // root type
+    action?: string | null; // String
+    id: number; // Int!
+    time?: string | null; // String
+    userId?: number | null; // Int
   }
   Mutation: {};
   Participant: { // root type
@@ -52,6 +82,7 @@ export interface NexusGenObjects {
   Poll: { // root type
     active: boolean; // Boolean!
     createdAt: string; // String!
+    currentStage: number; // Int!
     firstStageTime: string; // String!
     id: number; // Int!
     secondStageTime: string; // String!
@@ -62,8 +93,7 @@ export interface NexusGenObjects {
   User: { // root type
     id: number; // Int!
     name: string; // String!
-    online?: boolean | null; // Boolean
-    password?: string | null; // String
+    password: string; // String!
   }
   Vote: { // root type
     createdAt: string; // String!
@@ -71,6 +101,15 @@ export interface NexusGenObjects {
     id: number; // Int!
     pollId: number; // Int!
     userId: number; // Int!
+  }
+  VotesByEventNameAndTime: { // root type
+    name?: string | null; // String
+    times?: Array<NexusGenRootTypes['VotesByTime'] | null> | null; // [VotesByTime]
+    votes?: number | null; // Int
+  }
+  VotesByTime: { // root type
+    time?: string | null; // String
+    votes?: number | null; // Int
   }
 }
 
@@ -93,9 +132,29 @@ export interface NexusGenFieldTypes {
     approved: boolean; // Boolean!
     id: number; // Int!
     name: string; // String!
+    poll: NexusGenRootTypes['Poll']; // Poll!
+    pollId: number; // Int!
+    startTime: string; // String!
+    votes: NexusGenRootTypes['Vote'][]; // [Vote!]!
+    votesCount: number | null; // Int
+  }
+  EventName: { // field return type
+    events: NexusGenRootTypes['Event'][]; // [Event!]!
+    name: string; // String!
+  }
+  EventStartTime: { // field return type
+    events: NexusGenRootTypes['Event'][]; // [Event!]!
     startTime: string; // String!
   }
+  Feed: { // field return type
+    action: string | null; // String
+    id: number; // Int!
+    time: string | null; // String
+    user: NexusGenRootTypes['User'] | null; // User
+    userId: number | null; // Int
+  }
   Mutation: { // field return type
+    cancelPoll: NexusGenRootTypes['Poll'] | null; // Poll
     createPoll: NexusGenRootTypes['Poll'] | null; // Poll
     createVote: NexusGenRootTypes['Vote'] | null; // Vote
     login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
@@ -111,24 +170,28 @@ export interface NexusGenFieldTypes {
   Poll: { // field return type
     active: boolean; // Boolean!
     createdAt: string; // String!
+    currentStage: number; // Int!
+    events: NexusGenRootTypes['Event'][]; // [Event!]!
     firstStageTime: string; // String!
     id: number; // Int!
     secondStageTime: string; // String!
     user: NexusGenRootTypes['User']; // User!
     userId: number; // Int!
+    votes: NexusGenRootTypes['Vote'][]; // [Vote!]!
+    votesByEventNameAndTime: Array<NexusGenRootTypes['VotesByEventNameAndTime'] | null> | null; // [VotesByEventNameAndTime]
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    me: NexusGenRootTypes['User'] | null; // User
   }
   Subscription: { // field return type
     currentPoll: NexusGenRootTypes['Poll'] | null; // Poll
-    newVotes: NexusGenRootTypes['Vote'] | null; // Vote
+    feed: NexusGenRootTypes['Feed'] | null; // Feed
+    newVotes: number | null; // Int
   }
   User: { // field return type
     id: number; // Int!
     name: string; // String!
-    online: boolean | null; // Boolean
-    password: string | null; // String
+    password: string; // String!
   }
   Vote: { // field return type
     createdAt: string; // String!
@@ -139,6 +202,15 @@ export interface NexusGenFieldTypes {
     pollId: number; // Int!
     user: NexusGenRootTypes['User']; // User!
     userId: number; // Int!
+  }
+  VotesByEventNameAndTime: { // field return type
+    name: string | null; // String
+    times: Array<NexusGenRootTypes['VotesByTime'] | null> | null; // [VotesByTime]
+    votes: number | null; // Int
+  }
+  VotesByTime: { // field return type
+    time: string | null; // String
+    votes: number | null; // Int
   }
 }
 
@@ -151,9 +223,29 @@ export interface NexusGenFieldTypeNames {
     approved: 'Boolean'
     id: 'Int'
     name: 'String'
+    poll: 'Poll'
+    pollId: 'Int'
+    startTime: 'String'
+    votes: 'Vote'
+    votesCount: 'Int'
+  }
+  EventName: { // field return type name
+    events: 'Event'
+    name: 'String'
+  }
+  EventStartTime: { // field return type name
+    events: 'Event'
     startTime: 'String'
   }
+  Feed: { // field return type name
+    action: 'String'
+    id: 'Int'
+    time: 'String'
+    user: 'User'
+    userId: 'Int'
+  }
   Mutation: { // field return type name
+    cancelPoll: 'Poll'
     createPoll: 'Poll'
     createVote: 'Vote'
     login: 'AuthPayload'
@@ -169,23 +261,27 @@ export interface NexusGenFieldTypeNames {
   Poll: { // field return type name
     active: 'Boolean'
     createdAt: 'String'
+    currentStage: 'Int'
+    events: 'Event'
     firstStageTime: 'String'
     id: 'Int'
     secondStageTime: 'String'
     user: 'User'
     userId: 'Int'
+    votes: 'Vote'
+    votesByEventNameAndTime: 'VotesByEventNameAndTime'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    me: 'User'
   }
   Subscription: { // field return type name
     currentPoll: 'Poll'
-    newVotes: 'Vote'
+    feed: 'Feed'
+    newVotes: 'Int'
   }
   User: { // field return type name
     id: 'Int'
     name: 'String'
-    online: 'Boolean'
     password: 'String'
   }
   Vote: { // field return type name
@@ -198,9 +294,42 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'Int'
   }
+  VotesByEventNameAndTime: { // field return type name
+    name: 'String'
+    times: 'VotesByTime'
+    votes: 'Int'
+  }
+  VotesByTime: { // field return type name
+    time: 'String'
+    votes: 'Int'
+  }
 }
 
 export interface NexusGenArgTypes {
+  Event: {
+    votes: { // args
+      after?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
+      before?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
+  EventName: {
+    events: { // args
+      after?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      before?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
+  EventStartTime: {
+    events: { // args
+      after?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      before?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
   Mutation: {
     createPoll: { // args
       firstStageTime: string; // String!
@@ -220,6 +349,20 @@ export interface NexusGenArgTypes {
       password: string; // String!
     }
   }
+  Poll: {
+    events: { // args
+      after?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      before?: NexusGenInputs['EventWhereUniqueInput'] | null; // EventWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+    votes: { // args
+      after?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
+      before?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
   Subscription: {
     newVotes: { // args
       pollId: number; // Int!
@@ -235,7 +378,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 

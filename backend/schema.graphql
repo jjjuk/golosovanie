@@ -11,10 +11,38 @@ type Event {
   approved: Boolean!
   id: Int!
   name: String!
+  poll: Poll!
+  pollId: Int!
+  startTime: String!
+  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
+  votesCount: Int
+}
+
+type EventName {
+  events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
+  name: String!
+}
+
+type EventStartTime {
+  events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   startTime: String!
 }
 
+input EventWhereUniqueInput {
+  id: Int
+  unique_event: Unique_eventCompoundUniqueInput
+}
+
+type Feed {
+  action: String
+  id: Int!
+  time: String
+  user: User
+  userId: Int
+}
+
 type Mutation {
+  cancelPoll: Poll
   createPoll(firstStageTime: String!, secondStageTime: String!): Poll
   createVote(name: String!, pollId: Int!, startTime: String!): Vote
   login(name: String!, password: String!): AuthPayload
@@ -32,27 +60,42 @@ type Participant {
 type Poll {
   active: Boolean!
   createdAt: String!
+  currentStage: Int!
+  events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   firstStageTime: String!
   id: Int!
   secondStageTime: String!
   user: User!
   userId: Int!
+  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
+  votesByEventNameAndTime: [VotesByEventNameAndTime]
 }
 
 type Query {
-  ok: Boolean!
+  me: User
 }
 
 type Subscription {
   currentPoll: Poll
-  newVotes(pollId: Int!): Vote
+  feed: Feed
+  newVotes(pollId: Int!): Int
+}
+
+input Unique_eventCompoundUniqueInput {
+  name: String!
+  pollId: Int!
+  startTime: String!
+}
+
+input Unique_voteCompoundUniqueInput {
+  pollId: Int!
+  userId: Int!
 }
 
 type User {
   id: Int!
   name: String!
-  online: Boolean
-  password: String
+  password: String!
 }
 
 type Vote {
@@ -64,4 +107,20 @@ type Vote {
   pollId: Int!
   user: User!
   userId: Int!
+}
+
+type VotesByEventNameAndTime {
+  name: String
+  times: [VotesByTime]
+  votes: Int
+}
+
+type VotesByTime {
+  time: String
+  votes: Int
+}
+
+input VoteWhereUniqueInput {
+  id: Int
+  unique_vote: Unique_voteCompoundUniqueInput
 }

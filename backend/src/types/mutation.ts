@@ -1,7 +1,7 @@
 import { mutationType, stringArg, nonNull, intArg } from '@nexus/schema'
 import { sign } from 'jsonwebtoken'
-import { appSecret, getUserId } from '../utils'
-import { UserInputError, AuthenticationError } from 'apollo-server'
+import { appSecret, getUserId, pretty } from '../utils'
+import { UserInputError } from 'apollo-server'
 
 export const Mutation = mutationType({
   definition(t) {
@@ -115,12 +115,31 @@ export const Mutation = mutationType({
           },
           select: {
             active: true,
+            currentStage: true,
           },
         })
 
-        if (!isActive) new UserInputError('Poll is no longer active')
+        console.log(pretty(isActive))
+
+        if (
+          isActive === null ||
+          !isActive.active ||
+          isActive?.currentStage === 2
+        )
+          throw new UserInputError('Poll is no longer active')
 
         const userId = Number(getUserId(ctx))
+
+        await prisma.eventStartTime.upsert({
+          where: { startTime },
+          create: { startTime },
+          update: {},
+        })
+        await prisma.eventName.upsert({
+          where: { name },
+          create: { name },
+          update: {},
+        })
 
         const vote = await prisma.vote.create({
           data: {
@@ -128,21 +147,63 @@ export const Mutation = mutationType({
             poll: { connect: { id: pollId } },
             user: { connect: { id: userId } },
             event: {
-              create: {
-                eventName: {
-                  connectOrCreate: {
-                    where: { name },
-                    create: { name },
+              connectOrCreate: {
+                where: {
+                  unique_event: {
+                    name,
+                    startTime,
+                    pollId,
                   },
                 },
-                startTime,
+                create: {
+                  eventName: { connect: { name } },
+                  eventStartTime: { connect: { startTime } },
+                  poll: { connect: { id: pollId } },
+                },
               },
             },
           },
         })
 
-        pubsub.publish(`NEW_VOTE_POLLID=${pollId}`, vote)
+        const voteCount = await prisma.vote.count({
+          where: {
+            pollId,
+          },
+        })
+
+        pubsub.publish(`NEW_VOTE_POLLID=${pollId}`, voteCount)
         return vote
+      },
+    })
+
+    t.field('cancelPoll', {
+      type: 'Poll',
+      resolve: async (_, __, ctx) => {
+        const { prisma, pubsub } = ctx
+        const userId = Number(getUserId(ctx))
+        const { id } = await prisma.poll.findFirst({
+          where: {
+            userId,
+            active: true,
+          },
+          select: { id: true },
+        })
+
+        if (!id) throw new Error(`You don't have active polls`)
+        pubsub.publish(
+          'CURRENT_POLL',
+          await prisma.poll.update({
+            where: { id },
+            data: {
+              currentStage: 3,
+              active: false,
+            },
+          })
+        )
+
+        return await prisma.poll.delete({
+          where: { id },
+        })
       },
     })
   },

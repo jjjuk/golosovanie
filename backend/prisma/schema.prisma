@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -13,9 +13,8 @@ generator client {
 model User {
   id Int @default(autoincrement()) @id
   name String @unique
-  color String?
-  password String?
-  online Boolean?  
+  password String
+  events Participant[]
 }
 
 model Poll {
@@ -28,11 +27,16 @@ model Poll {
   firstStageTime String
   secondStageTime String
   votes Vote[]
+  events Event[]
 }
 
 model EventName{
-  id Int @default(autoincrement()) @id
-  name String @unique
+  name String @unique 
+  events Event[]
+}
+
+model EventStartTime {
+  startTime String @unique 
   events Event[]
 }
 
@@ -40,8 +44,15 @@ model Event {
   id Int @default(autoincrement()) @id
   name String
   eventName EventName @relation(fields: [name], references: [name])
-  approved Boolean @default(false)
   startTime String
+  eventStartTime EventStartTime @relation(fields: [startTime], references: [startTime])
+  pollId Int
+  poll Poll @relation(fields: [pollId], references: [id])
+  approved Boolean @default(false)
+  paticipants Participant[]
+  votes Vote[]
+
+  @@unique([name, startTime, pollId], name: "unique_event")
 }
 
 model Vote {

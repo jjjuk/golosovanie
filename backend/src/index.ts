@@ -10,9 +10,14 @@ import { applyMiddleware } from 'graphql-middleware'
 import { permissions } from './middleware/shield'
 import { feed } from './middleware/feed'
 
-import chalk from 'chalk'
+import {
+  magentaBright as pink,
+  cyanBright as cyan,
+  greenBright as green,
+} from 'chalk'
 
 import * as types from './types'
+import { getPollVotes } from './utils'
 
 const eventEmitter = new EventEmitter()
 eventEmitter.setMaxListeners(256)
@@ -29,12 +34,6 @@ feed(prisma, pubsub)
       where: {
         active: true,
       },
-      select: {
-        id: true,
-        createdAt: true,
-        firstStageTime: true,
-        secondStageTime: true,
-      },
     })
 
     let {
@@ -42,9 +41,10 @@ feed(prisma, pubsub)
       createdAt = null,
       firstStageTime = null,
       secondStageTime = null,
+      currentStage = null,
     } = !!currentPoll && currentPoll
 
-    let logTime = chalk.cyan(new Date().toLocaleTimeString())
+    let logTime = cyan(new Date().toLocaleTimeString())
 
     if (
       !!currentPoll &&
@@ -56,11 +56,26 @@ feed(prisma, pubsub)
         data: { active: false },
       })
 
-      pubsub.publish('CURRENT_POLL', poll)
-      console.log(logTime, chalk.green(`Poll with id ${id} now closed`))
-    } else console.log(logTime, chalk.gray(`No polls closed`))
+      // const votesByEventNameAndTime = await getPollVotes(id, prisma)
 
-    await new Promise((resolve) => setTimeout(resolve, 60000))
+
+      pubsub.publish('CURRENT_POLL', poll/* { ...poll, votesByEventNameAndTime } */)
+      console.log(logTime, green(`Poll with id ${id} now closed`))
+    } else if (
+      !!currentPoll &&
+      currentStage !== 2 &&
+      Number(createdAt) + Number(firstStageTime) < Date.now()
+    ) {
+      let poll = await prisma.poll.update({
+        where: { id },
+        data: { currentStage: 2 },
+      })
+
+      pubsub.publish('CURRENT_POLL', poll)
+      console.log(logTime, green(`Poll with id ${id} now in stage 2`))
+    } /* else console.log(logTime, chalk.gray(`No poll actions`)) */
+
+    await new Promise((resolve) => setTimeout(resolve, 10 * 1000))
   }
 })()
 //dont judge me, it's a test task
@@ -102,4 +117,7 @@ const server = new ApolloServer({
   }),
 })
 
-server.listen(4000)
+const port = 4000
+server.listen(port, () => {
+  console.log(pink('✨ Server running at'), cyan(`http://localhost:${port} ✨`))
+})

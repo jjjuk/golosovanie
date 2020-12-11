@@ -1,0 +1,33 @@
+version: '3.3'
+
+networks:
+  polls:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 174.19.0.1/16
+
+services:
+  db:
+    image: postgres   
+    # volumes:
+    #   - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: FiGreo32reoqowR1321e12
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    networks:
+      polls:
+        ipv4_address: 174.19.0.4
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      polls:
+        ipv4_address: 174.19.0.5

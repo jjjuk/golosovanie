@@ -7,9 +7,13 @@ const isAuthenticated = rule({ cache: 'contextual' })((_, __, ctx) => {
 
 export const permissions = shield(
   {
-   
+    Mutation: {
+      createPoll: isAuthenticated,
+      cancelPoll: isAuthenticated,
+      createVote: isAuthenticated,
+    },
   },
   {
-    allowExternalErrors: true,    
+    allowExternalErrors: true,
   }
 )
