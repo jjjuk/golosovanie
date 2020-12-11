@@ -52,7 +52,7 @@ feed(prisma, pubsub)
     ) {
       let poll = await prisma.poll.update({
         where: { id },
-        data: { active: false, currentStage: 2 },
+        data: { active: false },
       })
 
       pubsub.publish('CURRENT_POLL', poll)
