@@ -14,6 +14,14 @@ export const Query = queryType({
 
         return await ctx.prisma.user.findUnique({ where: { id } })
       },
-    })   
+    })
+
+    t.field('currentPoll', {
+      type: 'Poll',
+      resolve: (_, __, { prisma }) =>
+        prisma.poll.findFirst({
+          where: { active: true },
+        }),
+    })
   },
 })
