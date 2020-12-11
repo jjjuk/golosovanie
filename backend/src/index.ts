@@ -17,7 +17,6 @@ import {
 } from 'chalk'
 
 import * as types from './types'
-import { getPollVotes } from './utils'
 
 const eventEmitter = new EventEmitter()
 eventEmitter.setMaxListeners(256)
@@ -53,13 +52,10 @@ feed(prisma, pubsub)
     ) {
       let poll = await prisma.poll.update({
         where: { id },
-        data: { active: false },
+        data: { active: false, currentStage: 2 },
       })
 
-      // const votesByEventNameAndTime = await getPollVotes(id, prisma)
-
-
-      pubsub.publish('CURRENT_POLL', poll/* { ...poll, votesByEventNameAndTime } */)
+      pubsub.publish('CURRENT_POLL', poll)
       console.log(logTime, green(`Poll with id ${id} now closed`))
     } else if (
       !!currentPoll &&
@@ -73,7 +69,7 @@ feed(prisma, pubsub)
 
       pubsub.publish('CURRENT_POLL', poll)
       console.log(logTime, green(`Poll with id ${id} now in stage 2`))
-    } /* else console.log(logTime, chalk.gray(`No poll actions`)) */
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 10 * 1000))
   }

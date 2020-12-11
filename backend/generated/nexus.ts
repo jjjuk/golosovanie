@@ -179,6 +179,7 @@ export interface NexusGenFieldTypes {
     userId: number; // Int!
     votes: NexusGenRootTypes['Vote'][]; // [Vote!]!
     votesByEventNameAndTime: Array<NexusGenRootTypes['VotesByEventNameAndTime'] | null> | null; // [VotesByEventNameAndTime]
+    votesCount: number | null; // Int
   }
   Query: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
@@ -270,6 +271,7 @@ export interface NexusGenFieldTypeNames {
     userId: 'Int'
     votes: 'Vote'
     votesByEventNameAndTime: 'VotesByEventNameAndTime'
+    votesCount: 'Int'
   }
   Query: { // field return type name
     me: 'User'

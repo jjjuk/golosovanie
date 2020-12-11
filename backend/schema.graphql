@@ -69,6 +69,7 @@ type Poll {
   userId: Int!
   votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
   votesByEventNameAndTime: [VotesByEventNameAndTime]
+  votesCount: Int
 }
 
 type Query {

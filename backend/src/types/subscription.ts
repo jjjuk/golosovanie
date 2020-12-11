@@ -21,6 +21,6 @@ export const Subscription = subscriptionType({
       },
       subscribe: (_, { pollId }, { pubsub }) => pubsub.asyncIterator(`NEW_VOTE_POLLID=${pollId}`),
       resolve: (votePromise: any) => votePromise
-    })
+    })    
   },
 })

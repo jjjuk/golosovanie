@@ -16,7 +16,14 @@ export const Poll = objectType({
     t.model.currentStage()
     t.list.field('votesByEventNameAndTime', {
       type: 'VotesByEventNameAndTime',
-      resolve: ({ id }, _, { prisma }) => getPollVotes(id, prisma),
+      resolve: ({ id, currentStage, active }, _, { prisma }) =>
+        active && currentStage === 2 && getPollVotes(id, prisma),
+    })
+    t.int('votesCount', {
+      resolve: ({ id: pollId }, _, { prisma }) =>
+        prisma.vote.count({
+          where: { pollId },
+        }),
     })
   },
 })

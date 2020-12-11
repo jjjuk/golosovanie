@@ -190,6 +190,7 @@ export const Mutation = mutationType({
         })
 
         if (!id) throw new Error(`You don't have active polls`)
+        
         pubsub.publish(
           'CURRENT_POLL',
           await prisma.poll.update({
