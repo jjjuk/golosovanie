@@ -29,13 +29,13 @@ feed(prisma, pubsub)
 //little messy alternative to cron-job
 ;(async () => {
   while (true) {
-    let currentPoll = await prisma.poll.findFirst({
+    const currentPoll = await prisma.poll.findFirst({
       where: {
         active: true,
       },
     })
 
-    let {
+    const {
       id = null,
       createdAt = null,
       firstStageTime = null,
@@ -43,7 +43,7 @@ feed(prisma, pubsub)
       currentStage = null,
     } = !!currentPoll && currentPoll
 
-    let logTime = cyan(new Date().toLocaleTimeString())
+    const logTime = cyan(new Date().toLocaleTimeString())
 
     if (
       !!currentPoll &&
