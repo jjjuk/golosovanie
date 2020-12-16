@@ -1,11 +1,11 @@
 version: '3.3'
 
 networks:
-  polls:
+  poll:
     driver: bridge
     ipam:
       config:
-        - subnet: 174.19.0.1/16
+        - subnet: 174.20.0.1/16
 
 services:
   db:
@@ -20,8 +20,8 @@ services:
     ports:
       - 5432:5432
     networks:
-      polls:
-        ipv4_address: 174.19.0.4
+      poll:
+        ipv4_address: 174.20.0.4
 
   adminer:
     image: adminer
@@ -29,5 +29,28 @@ services:
     ports:
       - 8080:8080
     networks:
-      polls:
-        ipv4_address: 174.19.0.5
+      poll:
+        ipv4_address: 174.20.0.5
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    ports:
+      - 4000:4000
+    networks:
+        poll:
+          ipv4_address: 174.20.0.3
+
+  frontend:
+    build: ./frontend
+    depends_on:
+     - backend
+    ports: 
+     - 5000:5000
+    networks:
+      poll:
+        ipv4_address: 174.20.0.6
+
+
+  

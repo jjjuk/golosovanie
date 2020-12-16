@@ -39,8 +39,9 @@ const Redirect = ({ children }) => {
       client
         .query(POLL, { id })
         .toPromise()
-        .then(({ data }) => {
+        .then(({ data, error }) => {
           setPoll(data.currentPoll)
+          !!error && localStorage.removeItem('token') //my urql auth exchange is in touble :/
         }),
     [client]
   )
