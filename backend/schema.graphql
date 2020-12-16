@@ -7,10 +7,17 @@ type AuthPayload {
   user: User
 }
 
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
 type Event {
   approved: Boolean!
   id: Int!
+  iParticipate(id: Int!): Boolean
   name: String!
+  paticipants(after: ParticipantWhereUniqueInput, before: ParticipantWhereUniqueInput, first: Int, last: Int): [Participant!]!
   poll: Poll!
   pollId: Int!
   startTime: String!
@@ -18,14 +25,57 @@ type Event {
   votesCount: Int
 }
 
+input EventListRelationFilter {
+  every: EventWhereInput
+  none: EventWhereInput
+  some: EventWhereInput
+}
+
 type EventName {
   events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   name: String!
 }
 
+input EventNameWhereInput {
+  AND: [EventNameWhereInput!]
+  events: EventListRelationFilter
+  name: StringFilter
+  NOT: [EventNameWhereInput!]
+  OR: [EventNameWhereInput!]
+}
+
+input EventNameWhereUniqueInput {
+  name: String
+}
+
 type EventStartTime {
   events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   startTime: String!
+}
+
+input EventStartTimeWhereInput {
+  AND: [EventStartTimeWhereInput!]
+  events: EventListRelationFilter
+  NOT: [EventStartTimeWhereInput!]
+  OR: [EventStartTimeWhereInput!]
+  startTime: StringFilter
+}
+
+input EventWhereInput {
+  AND: [EventWhereInput!]
+  approved: BoolFilter
+  eventName: EventNameWhereInput
+  eventStartTime: EventStartTimeWhereInput
+  id: IntFilter
+  name: StringFilter
+  NOT: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  paticipants: ParticipantListRelationFilter
+  poll: PollWhereInput
+  Poll: PollListRelationFilter
+  pollId: IntFilter
+  startTime: StringFilter
+  votes: VoteListRelationFilter
 }
 
 input EventWhereUniqueInput {
@@ -35,10 +85,61 @@ input EventWhereUniqueInput {
 
 type Feed {
   action: String
+  feedLength: Int
   id: Int!
   time: String
   user: User
   userId: Int
+}
+
+input FeedListRelationFilter {
+  every: FeedWhereInput
+  none: FeedWhereInput
+  some: FeedWhereInput
+}
+
+input FeedOrderByInput {
+  action: SortOrder
+  id: SortOrder
+  time: SortOrder
+  userId: SortOrder
+}
+
+input FeedWhereInput {
+  action: StringNullableFilter
+  AND: [FeedWhereInput!]
+  id: IntFilter
+  NOT: [FeedWhereInput!]
+  OR: [FeedWhereInput!]
+  time: StringNullableFilter
+  user: UserWhereInput
+  userId: IntNullableFilter
+}
+
+input FeedWhereUniqueInput {
+  id: Int
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
 }
 
 type Mutation {
@@ -46,7 +147,63 @@ type Mutation {
   createPoll(firstStageTime: String!, secondStageTime: String!): Poll
   createVote(name: String!, pollId: Int!, startTime: String!): Vote
   login(name: String!, password: String!): AuthPayload
+  participate(eventId: Int!): Participant
   signup(name: String!, password: String!): AuthPayload
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
 }
 
 type Participant {
@@ -57,6 +214,28 @@ type Participant {
   userId: Int!
 }
 
+input ParticipantListRelationFilter {
+  every: ParticipantWhereInput
+  none: ParticipantWhereInput
+  some: ParticipantWhereInput
+}
+
+input ParticipantWhereInput {
+  AND: [ParticipantWhereInput!]
+  event: EventWhereInput
+  eventId: IntFilter
+  id: IntFilter
+  NOT: [ParticipantWhereInput!]
+  OR: [ParticipantWhereInput!]
+  user: UserWhereInput
+  userId: IntFilter
+}
+
+input ParticipantWhereUniqueInput {
+  id: Int
+  unique_participant: Unique_participantCompoundUniqueInput
+}
+
 type Poll {
   active: Boolean!
   createdAt: String!
@@ -64,16 +243,87 @@ type Poll {
   events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   firstStageTime: String!
   id: Int!
+  iveVoted(id: Int!): Boolean
   secondStageTime: String!
   user: User!
   userId: Int!
   votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
   votesByEventNameAndTime: [VotesByEventNameAndTime]
   votesCount: Int
+  winnerEvent: Event
+  winnerEventId: Int
+}
+
+input PollListRelationFilter {
+  every: PollWhereInput
+  none: PollWhereInput
+  some: PollWhereInput
+}
+
+input PollWhereInput {
+  active: BoolFilter
+  AND: [PollWhereInput!]
+  createdAt: StringFilter
+  currentStage: IntFilter
+  events: EventListRelationFilter
+  firstStageTime: StringFilter
+  id: IntFilter
+  NOT: [PollWhereInput!]
+  OR: [PollWhereInput!]
+  secondStageTime: StringFilter
+  user: UserWhereInput
+  userId: IntFilter
+  votes: VoteListRelationFilter
+  winnerEvent: EventWhereInput
+  winnerEventId: IntNullableFilter
 }
 
 type Query {
+  currentPoll: Poll
+  eventNames(after: EventNameWhereUniqueInput, before: EventNameWhereUniqueInput, first: Int, last: Int, where: EventNameWhereInput): [EventName!]!
+  feed(after: FeedWhereUniqueInput, before: FeedWhereUniqueInput, first: Int, last: Int, orderBy: [FeedOrderByInput!]): [Feed!]!
+  feedLength: Int
   me: User
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
 }
 
 type Subscription {
@@ -88,6 +338,11 @@ input Unique_eventCompoundUniqueInput {
   startTime: String!
 }
 
+input Unique_participantCompoundUniqueInput {
+  eventId: Int!
+  userId: Int!
+}
+
 input Unique_voteCompoundUniqueInput {
   pollId: Int!
   userId: Int!
@@ -97,6 +352,19 @@ type User {
   id: Int!
   name: String!
   password: String!
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  events: ParticipantListRelationFilter
+  Feed: FeedListRelationFilter
+  id: IntFilter
+  name: StringFilter
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  password: StringFilter
+  Poll: PollListRelationFilter
+  Vote: VoteListRelationFilter
 }
 
 type Vote {
@@ -110,6 +378,12 @@ type Vote {
   userId: Int!
 }
 
+input VoteListRelationFilter {
+  every: VoteWhereInput
+  none: VoteWhereInput
+  some: VoteWhereInput
+}
+
 type VotesByEventNameAndTime {
   name: String
   times: [VotesByTime]
@@ -119,6 +393,20 @@ type VotesByEventNameAndTime {
 type VotesByTime {
   time: String
   votes: Int
+}
+
+input VoteWhereInput {
+  AND: [VoteWhereInput!]
+  createdAt: StringFilter
+  event: EventWhereInput
+  eventId: IntFilter
+  id: IntFilter
+  NOT: [VoteWhereInput!]
+  OR: [VoteWhereInput!]
+  poll: PollWhereInput
+  pollId: IntFilter
+  user: UserWhereInput
+  userId: IntFilter
 }
 
 input VoteWhereUniqueInput {

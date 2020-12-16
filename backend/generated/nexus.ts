@@ -19,18 +19,257 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  BoolFilter: { // input type
+    equals?: boolean | null; // Boolean
+    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
+  }
+  EventListRelationFilter: { // input type
+    every?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    none?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    some?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+  }
+  EventNameWhereInput: { // input type
+    AND?: NexusGenInputs['EventNameWhereInput'][] | null; // [EventNameWhereInput!]
+    events?: NexusGenInputs['EventListRelationFilter'] | null; // EventListRelationFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    NOT?: NexusGenInputs['EventNameWhereInput'][] | null; // [EventNameWhereInput!]
+    OR?: NexusGenInputs['EventNameWhereInput'][] | null; // [EventNameWhereInput!]
+  }
+  EventNameWhereUniqueInput: { // input type
+    name?: string | null; // String
+  }
+  EventStartTimeWhereInput: { // input type
+    AND?: NexusGenInputs['EventStartTimeWhereInput'][] | null; // [EventStartTimeWhereInput!]
+    events?: NexusGenInputs['EventListRelationFilter'] | null; // EventListRelationFilter
+    NOT?: NexusGenInputs['EventStartTimeWhereInput'][] | null; // [EventStartTimeWhereInput!]
+    OR?: NexusGenInputs['EventStartTimeWhereInput'][] | null; // [EventStartTimeWhereInput!]
+    startTime?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  EventWhereInput: { // input type
+    AND?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    approved?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    eventName?: NexusGenInputs['EventNameWhereInput'] | null; // EventNameWhereInput
+    eventStartTime?: NexusGenInputs['EventStartTimeWhereInput'] | null; // EventStartTimeWhereInput
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    NOT?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    OR?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    paticipants?: NexusGenInputs['ParticipantListRelationFilter'] | null; // ParticipantListRelationFilter
+    poll?: NexusGenInputs['PollWhereInput'] | null; // PollWhereInput
+    Poll?: NexusGenInputs['PollListRelationFilter'] | null; // PollListRelationFilter
+    pollId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    startTime?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    votes?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
+  }
   EventWhereUniqueInput: { // input type
     id?: number | null; // Int
     unique_event?: NexusGenInputs['Unique_eventCompoundUniqueInput'] | null; // Unique_eventCompoundUniqueInput
+  }
+  FeedListRelationFilter: { // input type
+    every?: NexusGenInputs['FeedWhereInput'] | null; // FeedWhereInput
+    none?: NexusGenInputs['FeedWhereInput'] | null; // FeedWhereInput
+    some?: NexusGenInputs['FeedWhereInput'] | null; // FeedWhereInput
+  }
+  FeedOrderByInput: { // input type
+    action?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    time?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    userId?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  FeedWhereInput: { // input type
+    action?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    AND?: NexusGenInputs['FeedWhereInput'][] | null; // [FeedWhereInput!]
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    NOT?: NexusGenInputs['FeedWhereInput'][] | null; // [FeedWhereInput!]
+    OR?: NexusGenInputs['FeedWhereInput'][] | null; // [FeedWhereInput!]
+    time?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+  }
+  FeedWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
+  IntFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  IntNullableFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntNullableFilter'] | null; // NestedIntNullableFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  NestedBoolFilter: { // input type
+    equals?: boolean | null; // Boolean
+    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
+  }
+  NestedIntFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  NestedIntNullableFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntNullableFilter'] | null; // NestedIntNullableFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  NestedStringFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  NestedStringNullableFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    not?: NexusGenInputs['NestedStringNullableFilter'] | null; // NestedStringNullableFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  ParticipantListRelationFilter: { // input type
+    every?: NexusGenInputs['ParticipantWhereInput'] | null; // ParticipantWhereInput
+    none?: NexusGenInputs['ParticipantWhereInput'] | null; // ParticipantWhereInput
+    some?: NexusGenInputs['ParticipantWhereInput'] | null; // ParticipantWhereInput
+  }
+  ParticipantWhereInput: { // input type
+    AND?: NexusGenInputs['ParticipantWhereInput'][] | null; // [ParticipantWhereInput!]
+    event?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    eventId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    NOT?: NexusGenInputs['ParticipantWhereInput'][] | null; // [ParticipantWhereInput!]
+    OR?: NexusGenInputs['ParticipantWhereInput'][] | null; // [ParticipantWhereInput!]
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
+  ParticipantWhereUniqueInput: { // input type
+    id?: number | null; // Int
+    unique_participant?: NexusGenInputs['Unique_participantCompoundUniqueInput'] | null; // Unique_participantCompoundUniqueInput
+  }
+  PollListRelationFilter: { // input type
+    every?: NexusGenInputs['PollWhereInput'] | null; // PollWhereInput
+    none?: NexusGenInputs['PollWhereInput'] | null; // PollWhereInput
+    some?: NexusGenInputs['PollWhereInput'] | null; // PollWhereInput
+  }
+  PollWhereInput: { // input type
+    active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    AND?: NexusGenInputs['PollWhereInput'][] | null; // [PollWhereInput!]
+    createdAt?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    currentStage?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    events?: NexusGenInputs['EventListRelationFilter'] | null; // EventListRelationFilter
+    firstStageTime?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    NOT?: NexusGenInputs['PollWhereInput'][] | null; // [PollWhereInput!]
+    OR?: NexusGenInputs['PollWhereInput'][] | null; // [PollWhereInput!]
+    secondStageTime?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    votes?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
+    winnerEvent?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    winnerEventId?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+  }
+  StringFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    mode?: NexusGenEnums['QueryMode'] | null; // QueryMode
+    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  StringNullableFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    mode?: NexusGenEnums['QueryMode'] | null; // QueryMode
+    not?: NexusGenInputs['NestedStringNullableFilter'] | null; // NestedStringNullableFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
   }
   Unique_eventCompoundUniqueInput: { // input type
     name: string; // String!
     pollId: number; // Int!
     startTime: string; // String!
   }
+  Unique_participantCompoundUniqueInput: { // input type
+    eventId: number; // Int!
+    userId: number; // Int!
+  }
   Unique_voteCompoundUniqueInput: { // input type
     pollId: number; // Int!
     userId: number; // Int!
+  }
+  UserWhereInput: { // input type
+    AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    events?: NexusGenInputs['ParticipantListRelationFilter'] | null; // ParticipantListRelationFilter
+    Feed?: NexusGenInputs['FeedListRelationFilter'] | null; // FeedListRelationFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    password?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    Poll?: NexusGenInputs['PollListRelationFilter'] | null; // PollListRelationFilter
+    Vote?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
+  }
+  VoteListRelationFilter: { // input type
+    every?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+    none?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+    some?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+  }
+  VoteWhereInput: { // input type
+    AND?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    createdAt?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    event?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    eventId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    NOT?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    OR?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    poll?: NexusGenInputs['PollWhereInput'] | null; // PollWhereInput
+    pollId?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
   VoteWhereUniqueInput: { // input type
     id?: number | null; // Int
@@ -39,6 +278,8 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  QueryMode: "default" | "insensitive"
+  SortOrder: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -87,6 +328,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     secondStageTime: string; // String!
     userId: number; // Int!
+    winnerEventId?: number | null; // Int
   }
   Query: {};
   Subscription: {};
@@ -121,7 +363,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
@@ -131,7 +373,9 @@ export interface NexusGenFieldTypes {
   Event: { // field return type
     approved: boolean; // Boolean!
     id: number; // Int!
+    iParticipate: boolean | null; // Boolean
     name: string; // String!
+    paticipants: NexusGenRootTypes['Participant'][]; // [Participant!]!
     poll: NexusGenRootTypes['Poll']; // Poll!
     pollId: number; // Int!
     startTime: string; // String!
@@ -148,6 +392,7 @@ export interface NexusGenFieldTypes {
   }
   Feed: { // field return type
     action: string | null; // String
+    feedLength: number | null; // Int
     id: number; // Int!
     time: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
@@ -158,6 +403,7 @@ export interface NexusGenFieldTypes {
     createPoll: NexusGenRootTypes['Poll'] | null; // Poll
     createVote: NexusGenRootTypes['Vote'] | null; // Vote
     login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+    participate: NexusGenRootTypes['Participant'] | null; // Participant
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
   Participant: { // field return type
@@ -174,14 +420,21 @@ export interface NexusGenFieldTypes {
     events: NexusGenRootTypes['Event'][]; // [Event!]!
     firstStageTime: string; // String!
     id: number; // Int!
+    iveVoted: boolean | null; // Boolean
     secondStageTime: string; // String!
     user: NexusGenRootTypes['User']; // User!
     userId: number; // Int!
     votes: NexusGenRootTypes['Vote'][]; // [Vote!]!
     votesByEventNameAndTime: Array<NexusGenRootTypes['VotesByEventNameAndTime'] | null> | null; // [VotesByEventNameAndTime]
     votesCount: number | null; // Int
+    winnerEvent: NexusGenRootTypes['Event'] | null; // Event
+    winnerEventId: number | null; // Int
   }
   Query: { // field return type
+    currentPoll: NexusGenRootTypes['Poll'] | null; // Poll
+    eventNames: NexusGenRootTypes['EventName'][]; // [EventName!]!
+    feed: NexusGenRootTypes['Feed'][]; // [Feed!]!
+    feedLength: number | null; // Int
     me: NexusGenRootTypes['User'] | null; // User
   }
   Subscription: { // field return type
@@ -223,7 +476,9 @@ export interface NexusGenFieldTypeNames {
   Event: { // field return type name
     approved: 'Boolean'
     id: 'Int'
+    iParticipate: 'Boolean'
     name: 'String'
+    paticipants: 'Participant'
     poll: 'Poll'
     pollId: 'Int'
     startTime: 'String'
@@ -240,6 +495,7 @@ export interface NexusGenFieldTypeNames {
   }
   Feed: { // field return type name
     action: 'String'
+    feedLength: 'Int'
     id: 'Int'
     time: 'String'
     user: 'User'
@@ -250,6 +506,7 @@ export interface NexusGenFieldTypeNames {
     createPoll: 'Poll'
     createVote: 'Vote'
     login: 'AuthPayload'
+    participate: 'Participant'
     signup: 'AuthPayload'
   }
   Participant: { // field return type name
@@ -266,14 +523,21 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     firstStageTime: 'String'
     id: 'Int'
+    iveVoted: 'Boolean'
     secondStageTime: 'String'
     user: 'User'
     userId: 'Int'
     votes: 'Vote'
     votesByEventNameAndTime: 'VotesByEventNameAndTime'
     votesCount: 'Int'
+    winnerEvent: 'Event'
+    winnerEventId: 'Int'
   }
   Query: { // field return type name
+    currentPoll: 'Poll'
+    eventNames: 'EventName'
+    feed: 'Feed'
+    feedLength: 'Int'
     me: 'User'
   }
   Subscription: { // field return type name
@@ -309,6 +573,15 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Event: {
+    iParticipate: { // args
+      id: number; // Int!
+    }
+    paticipants: { // args
+      after?: NexusGenInputs['ParticipantWhereUniqueInput'] | null; // ParticipantWhereUniqueInput
+      before?: NexusGenInputs['ParticipantWhereUniqueInput'] | null; // ParticipantWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
     votes: { // args
       after?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
       before?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
@@ -346,6 +619,9 @@ export interface NexusGenArgTypes {
       name: string; // String!
       password: string; // String!
     }
+    participate: { // args
+      eventId: number; // Int!
+    }
     signup: { // args
       name: string; // String!
       password: string; // String!
@@ -358,11 +634,30 @@ export interface NexusGenArgTypes {
       first?: number | null; // Int
       last?: number | null; // Int
     }
+    iveVoted: { // args
+      id: number; // Int!
+    }
     votes: { // args
       after?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
       before?: NexusGenInputs['VoteWhereUniqueInput'] | null; // VoteWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
+    }
+  }
+  Query: {
+    eventNames: { // args
+      after?: NexusGenInputs['EventNameWhereUniqueInput'] | null; // EventNameWhereUniqueInput
+      before?: NexusGenInputs['EventNameWhereUniqueInput'] | null; // EventNameWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+      where?: NexusGenInputs['EventNameWhereInput'] | null; // EventNameWhereInput
+    }
+    feed: { // args
+      after?: NexusGenInputs['FeedWhereUniqueInput'] | null; // FeedWhereUniqueInput
+      before?: NexusGenInputs['FeedWhereUniqueInput'] | null; // FeedWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+      orderBy?: NexusGenInputs['FeedOrderByInput'][] | null; // [FeedOrderByInput!]
     }
   }
   Subscription: {
@@ -382,7 +677,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 

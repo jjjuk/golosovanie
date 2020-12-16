@@ -32,8 +32,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'name' | 'password'
     }
     polls: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes' | 'events'
-      ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId' | 'winnerEvent' | 'votes' | 'events'
+      ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId'
     }
     eventNames: {
       filtering: 'AND' | 'OR' | 'NOT' | 'name' | 'events'
@@ -44,7 +44,7 @@ interface NexusPrismaInputs {
       ordering: 'startTime'
     }
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes' | 'Poll'
       ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
     votes: {
@@ -66,8 +66,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'userId' | 'eventId'
     }
     Poll: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'votes' | 'events'
-      ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId' | 'winnerEvent' | 'votes' | 'events'
+      ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId'
     }
     Vote: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
@@ -84,19 +84,19 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
     }
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes' | 'Poll'
       ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
   }
   EventName: {
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes' | 'Poll'
       ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
   }
   EventStartTime: {
     events: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'name' | 'eventName' | 'startTime' | 'eventStartTime' | 'pollId' | 'poll' | 'approved' | 'paticipants' | 'votes' | 'Poll'
       ordering: 'id' | 'name' | 'startTime' | 'pollId' | 'approved'
     }
   }
@@ -108,6 +108,10 @@ interface NexusPrismaInputs {
     votes: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'pollId' | 'poll' | 'userId' | 'user' | 'eventId' | 'event'
       ordering: 'id' | 'createdAt' | 'pollId' | 'userId' | 'eventId'
+    }
+    Poll: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'user' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId' | 'winnerEvent' | 'votes' | 'events'
+      ordering: 'id' | 'createdAt' | 'currentStage' | 'active' | 'userId' | 'firstStageTime' | 'secondStageTime' | 'winnerEventId'
     }
   }
   Vote: {
@@ -209,6 +213,8 @@ interface NexusPrismaOutputs {
     user: 'User'
     firstStageTime: 'String'
     secondStageTime: 'String'
+    winnerEventId: 'Int'
+    winnerEvent: 'Event'
     votes: 'Vote'
     events: 'Event'
   }
@@ -231,6 +237,7 @@ interface NexusPrismaOutputs {
     approved: 'Boolean'
     paticipants: 'Participant'
     votes: 'Vote'
+    Poll: 'Poll'
   }
   Vote: {
     id: 'Int'

@@ -26,6 +26,8 @@ model Poll {
   user User @relation(fields: [userId], references: [id])
   firstStageTime String
   secondStageTime String
+  winnerEventId Int?
+  winnerEvent Event? @relation(fields: [winnerEventId], references: [id], name: "winnerEvent")
   votes Vote[]
   events Event[]
 }

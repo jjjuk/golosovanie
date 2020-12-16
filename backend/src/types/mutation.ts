@@ -130,6 +130,15 @@ export const Mutation = mutationType({
 
         const userId = Number(getUserId(ctx))
 
+        const iveVoted = await ctx.prisma.vote.findFirst({
+          where: {
+            pollId,
+            userId,
+          },
+        })
+
+        if (!!iveVoted) throw new UserInputError(`You've already voted!`)
+
         await prisma.eventStartTime.upsert({
           where: { startTime },
           create: { startTime },
@@ -190,7 +199,7 @@ export const Mutation = mutationType({
         })
 
         if (!id) throw new Error(`You don't have active polls`)
-        
+
         pubsub.publish(
           'CURRENT_POLL',
           await prisma.poll.update({
@@ -205,6 +214,28 @@ export const Mutation = mutationType({
         return await prisma.poll.delete({
           where: { id },
         })
+      },
+    })
+
+    t.field('participate', {
+      type: 'Participant',
+      args: {
+        eventId: nonNull(intArg()),
+      },
+      resolve: async (_, { eventId }, ctx) => {
+        const { pubsub, prisma } = ctx
+        const userId = Number(getUserId(ctx))
+
+        const participant = await prisma.participant.create({
+          data: {
+            user: { connect: { id: userId } },
+            event: { connect: { id: eventId } },
+          },
+        })
+
+        // pubsub.publish(`PARTICIPANTS:${eventId}`, participant)
+
+        return participant
       },
     })
   },

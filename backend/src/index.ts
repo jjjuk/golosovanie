@@ -17,6 +17,7 @@ import {
 } from 'chalk'
 
 import * as types from './types'
+import { getPollVotes } from './utils'
 
 const eventEmitter = new EventEmitter()
 eventEmitter.setMaxListeners(256)
@@ -62,12 +63,67 @@ feed(prisma, pubsub)
       currentStage !== 2 &&
       Number(createdAt) + Number(firstStageTime) < Date.now()
     ) {
-      let poll = await prisma.poll.update({
-        where: { id },
-        data: { currentStage: 2 },
-      })
+      const votesByEventNameAndTime = await getPollVotes(id, prisma)
 
-      pubsub.publish('CURRENT_POLL', poll)
+      const winnerEventName =
+        votesByEventNameAndTime.length !== 0 &&
+        votesByEventNameAndTime.reduce((prev, current) => {
+          return prev.votes > current.votes ? prev : current
+        })
+      const winnerStartTime =
+        winnerEventName &&
+        winnerEventName.times.length !== 0 &&
+        winnerEventName.times.reduce((prev, current) => {
+          return prev.votes > current.votes ? prev : current
+        })
+      const winnerEvent =
+        !!winnerStartTime &&
+        (await prisma.event.findUnique({
+          where: {
+            unique_event: {
+              pollId: id,
+              name: winnerEventName.name,
+              startTime: winnerStartTime.time,
+            },
+          },
+          select: {
+            id: true,
+            votes: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        }))
+
+      let poll = !!winnerEvent
+        ? await prisma.poll.update({
+            where: { id },
+            data: {
+              currentStage: 2,
+              winnerEvent: { connect: { id: winnerEvent.id } },
+            },
+          })
+        : await prisma.poll.update({
+            where: { id },
+            data: {
+              currentStage: 2,
+            },
+          })
+
+      !!winnerEvent &&
+        (await Promise.all(
+          winnerEvent.votes.map(({ userId }) =>
+            prisma.participant.create({
+              data: {
+                user: { connect: { id: userId } },
+                event: { connect: { id: winnerEvent.id } },
+              },
+            })
+          )
+        ))
+
+      pubsub.publish('CURRENT_POLL', { ...poll, votesByEventNameAndTime })
       console.log(logTime, green(`Poll with id ${id} now in stage 2`))
     }
 

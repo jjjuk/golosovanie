@@ -1,5 +1,5 @@
-import { objectType } from '@nexus/schema'
-import { getPollVotes } from '../../utils'
+import { intArg, nonNull, objectType } from '@nexus/schema'
+import { getPollVotes, getUserId } from '../../utils'
 
 export const Poll = objectType({
   name: 'Poll',
@@ -13,6 +13,8 @@ export const Poll = objectType({
     t.model.secondStageTime()
     t.model.votes()
     t.model.events()
+    t.model.winnerEventId()
+    t.model.winnerEvent()
     t.model.currentStage()
     t.list.field('votesByEventNameAndTime', {
       type: 'VotesByEventNameAndTime',
@@ -24,6 +26,20 @@ export const Poll = objectType({
         prisma.vote.count({
           where: { pollId },
         }),
+    })
+    t.boolean('iveVoted', {
+      args: {
+        id: nonNull(intArg())
+      },
+      resolve: async ({ id: pollId  }, { id: userId }, ctx) => {
+        const iveVoted = await ctx.prisma.vote.findFirst({
+          where: {
+            pollId,
+            userId,
+          }
+        })
+        return !!iveVoted
+      }
     })
   },
 })

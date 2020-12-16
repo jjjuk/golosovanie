@@ -23,5 +23,12 @@ export const Query = queryType({
           where: { active: true },
         }),
     })
+
+    t.crud.eventNames({ pagination: true, filtering: true })
+    t.crud.feeds({ alias: 'feed', ordering: true, pagination: true })
+
+    t.int('feedLength', {
+      resolve: (_, __, { prisma }) => prisma.feed.count()
+    })
   },
 })

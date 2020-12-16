@@ -21,6 +21,15 @@ export const Subscription = subscriptionType({
       },
       subscribe: (_, { pollId }, { pubsub }) => pubsub.asyncIterator(`NEW_VOTE_POLLID=${pollId}`),
       resolve: (votePromise: any) => votePromise
-    })    
+    })
+    
+    // t.field('participants', {
+    //   type: 'Participant',
+    //   args: {
+    //     eventId: nonNull(intArg())
+    //   },
+    //   subscribe: (_, { eventId }, { pubsub }) => pubsub.asyncIterator(`PARTICIPANTS:${eventId}`),
+    //   resolve: (participantPromise: any) => participantPromise
+    // })
   },
 })

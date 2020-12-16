@@ -12,6 +12,9 @@ export const permissions = shield(
       cancelPoll: isAuthenticated,
       createVote: isAuthenticated,
     },
+    Query: {
+      me: isAuthenticated,
+    },
   },
   {
     allowExternalErrors: true,

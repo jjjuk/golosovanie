@@ -8,5 +8,8 @@ export const Feed = objectType({
     t.model.action()
     t.model.user()
     t.model.userId()
+    t.int('feedLength', {
+      resolve: (_, __, { prisma }) => prisma.feed.count(),
+    })
   },
 })
