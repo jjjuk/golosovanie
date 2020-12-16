@@ -82,6 +82,7 @@ const Stats = ({ data, innerData }) => {
           width: '370px',
           height: '370px',
           marginBottom: '-30px',
+          overflow: 'hidden'
         }}
       >
         <Typography
