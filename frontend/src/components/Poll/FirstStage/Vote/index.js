@@ -48,10 +48,11 @@ const CreatePoll = ({ setVoted, open, onClose, pollId }) => {
     createPoll({
       pollId,
       name,
-      startTime: startTime.valueOf().toString(),
+      startTime: startTime.setSeconds(0,0).valueOf().toString(),
     }).then(() => {
       onClose()
       setName('')
+      console.log(startTime.setSeconds(0,0).valueOf().toString())
       setStartTime(new Date(Date.now() + 3600000))
       setVoted(true)
     })
