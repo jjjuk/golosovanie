@@ -52,7 +52,7 @@ const CreatePoll = ({ open, onClose }) => {
         <div>
           <Typography variant='h6'>First Stage</Typography>
           <Typography>
-            Users vote for the event they whant to participate
+            Users vote for the event they want to participate
           </Typography>
           <FormControl className={classes.formCretePoll}>
             <InputLabel color='secondary' children='First stage time' />

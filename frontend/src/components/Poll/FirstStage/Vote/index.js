@@ -64,7 +64,7 @@ const CreatePoll = ({ setVoted, open, onClose, pollId }) => {
         <div>
           <Typography variant='h6'>Event</Typography>
           <Typography>
-            Creata new event or choose one from past surveys
+            Create a new event or choose one from past surveys
           </Typography>
           <FormControl className={classes.formCretePoll}>            
           <Autocomplete trigger={open} value={name} setValue={setName} />
