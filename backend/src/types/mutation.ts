@@ -1,6 +1,6 @@
 import { mutationType, stringArg, nonNull, intArg } from '@nexus/schema'
 import { sign } from 'jsonwebtoken'
-import { appSecret, getUserId, pretty } from '../utils'
+import { appSecret, getUserId } from '../utils'
 import { UserInputError } from 'apollo-server'
 
 export const Mutation = mutationType({
@@ -118,8 +118,6 @@ export const Mutation = mutationType({
             currentStage: true,
           },
         })
-
-        console.log(pretty(isActive))
 
         if (
           isActive === null ||
