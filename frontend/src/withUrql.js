@@ -5,6 +5,7 @@ import {
   dedupExchange,
   cacheExchange,
   fetchExchange,
+  errorExchange,
   subscriptionExchange,
 } from 'urql'
 import { authExchange } from '@urql/exchange-auth'
@@ -69,6 +70,14 @@ function WithUrql(App) {
       subscriptionExchange({
         forwardSubscription(operation) {
           return subscriptionClient.request(operation)
+        },
+      }),
+      errorExchange({
+        onError: (error) => {
+          const isAuthError = error.message === '[GraphQL] Not Authorised!'
+          if (isAuthError) {
+            localStorage.removeItem('token')
+          }
         },
       }),
       authExchange({
