@@ -31,9 +31,11 @@ const CreatePoll = ({ setVoted, open, onClose, pollId }) => {
   const mobile = useMediaQuery('(max-width:600px)')
 
   const [name, setName] = useState('')
-  const [startTime, setStartTime] = useState(new Date(Date.now() + 3600000))
+  const [startTime, setStartTime] = useState(
+    new Date(Date.now() - (Date.now() % 900000) + 900000)
+  )
 
-  const [, createPoll] = useMutation(VOTE)  
+  const [, createPoll] = useMutation(VOTE)
 
   /**
    * @param {Date} time Time.
@@ -43,16 +45,20 @@ const CreatePoll = ({ setVoted, open, onClose, pollId }) => {
     setStartTime(time)
   }
 
-  const invalidTime = startTime.valueOf() < Date.now()
+  const invalidTime =
+    startTime.valueOf() < Date.now() ||
+    startTime.valueOf() % 900000 !== 0 ||
+    (startTime.getHours() === 23 && startTime.getMinutes() > 0)
+
   const handleSubmit = () => {
     createPoll({
       pollId,
       name,
-      startTime: startTime.setSeconds(0,0).valueOf().toString(),
+      startTime: startTime.setSeconds(0, 0).valueOf().toString(),
     }).then(() => {
       onClose()
       setName('')
-      console.log(startTime.setSeconds(0,0).valueOf().toString())
+      console.log(startTime.setSeconds(0, 0).valueOf().toString())
       setStartTime(new Date(Date.now() + 3600000))
       setVoted(true)
     })
@@ -67,14 +73,14 @@ const CreatePoll = ({ setVoted, open, onClose, pollId }) => {
           <Typography>
             Create a new event or choose one from past surveys
           </Typography>
-          <FormControl className={classes.formCretePoll}>            
-          <Autocomplete trigger={open} value={name} setValue={setName} />
+          <FormControl className={classes.formCretePoll}>
+            <Autocomplete trigger={open} value={name} setValue={setName} />
           </FormControl>
         </div>
         <div className={classes.dailogSgmnt}>
           <Typography variant='h6'>Start time</Typography>
           <Typography>
-            Choose start time of your event from current hour to midnight!
+            Choose start time of your event from current hour to 23:00!
           </Typography>
           <FormControl className={classes.formCretePoll}>
             <PickerProvider utils={Utils}>

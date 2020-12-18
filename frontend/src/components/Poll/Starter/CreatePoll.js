@@ -62,6 +62,7 @@ const CreatePoll = ({ open, onClose }) => {
               color='secondary'
             >
               <MenuItem value={1000 * 10}>10 secs (debug)</MenuItem>
+              <MenuItem value={1000 * 120}>2 minutes (debug)</MenuItem>
               <MenuItem value={1000 * 60 * 5}>5 minutes</MenuItem>
               <MenuItem value={1000 * 60 * 15}>15 minutes</MenuItem>
               <MenuItem value={1000 * 60 * 30}>30 minutes</MenuItem>
@@ -85,6 +86,7 @@ const CreatePoll = ({ open, onClose }) => {
               color='secondary'
             >
               <MenuItem value={1000 * 10}>10 secs (debug)</MenuItem>
+              <MenuItem value={1000 * 120}>2 minutes (debug)</MenuItem>
               <MenuItem value={1000 * 60 * 5}>5 minutes</MenuItem>
               <MenuItem value={1000 * 60 * 15}>15 minutes</MenuItem>
               <MenuItem value={1000 * 60 * 30}>30 minutes</MenuItem>

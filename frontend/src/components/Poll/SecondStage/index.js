@@ -7,12 +7,15 @@ import { PARTICIPATE } from 'api'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Progress from '@material-ui/core/CircularProgress'
+import IconButton from '@material-ui/core/IconButton'
+import PersonIcon from '@material-ui/icons/PersonOutline'
 
 import CountDown from 'react-moment-countdown'
 import Reward from 'react-rewards'
 import moment from 'moment'
 
 import Stats from './Stats'
+import WhoVoted from './WhoVoted'
 
 import { theme, useStyles } from 'useStyles'
 
@@ -20,6 +23,7 @@ const SecondStage = () => {
   const classes = useStyles(theme)
   const client = useClient()
   const [starting, setStarting] = useState(false)
+  const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
   const [iveVoted, setIveVoted] = useState(false)
 
@@ -52,9 +56,13 @@ const SecondStage = () => {
       setIveVoted(true)
     }, 1500)
   }
-  // const handleClose = () => {
-  //   setOpen(false)
-  // }
+  const handlePersonClick = () => {
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
+  const users = winnerEvent.votes.map(({ user }) => user)
   const format =
     Number(firstStageTime) +
       Number(secondStageTime) +
@@ -98,15 +106,19 @@ const SecondStage = () => {
         children={
           !!winnerEvent ? (
             <b>
-              Event "{winnerEvent.name}" wins with {winnerEvent.votesCount}{' '}
+              Event "{winnerEvent.name}" wins with {winnerEvent.votesCount}
               votes!
               <br /> Start time {startTimeText}
+              <IconButton onClick={handlePersonClick} color='primary'>
+                <PersonIcon />
+              </IconButton>
             </b>
           ) : (
             <b>Oh no... No votes(</b>
           )
         }
       />
+
       {votesByEventNameAndTime?.length !== 0 && (
         <Reward ref={ref} type='memphis'>
           <Button
@@ -119,6 +131,14 @@ const SecondStage = () => {
             children={buttonCaption}
           />
         </Reward>
+      )}
+      {!!winnerEvent && (
+        <WhoVoted
+          open={open}
+          onClose={handleClose}
+          users={users}
+          time={startTimeText}
+        />
       )}
     </div>
   )

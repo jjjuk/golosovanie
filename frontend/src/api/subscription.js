@@ -37,6 +37,11 @@ export const POLL_SUB = gql`
         name
         votesCount
         startTime
+        votes {
+          user {
+            name
+          }
+        }
         paticipants {
           user {
             name
@@ -52,5 +57,11 @@ export const POLL_SUB = gql`
         }
       }
     }
+  }
+`
+
+export const NEW_VOTES = gql`
+  subscription newVotes($pollId: Int!) {
+    newVotes(pollId: $pollId)
   }
 `

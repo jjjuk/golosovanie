@@ -121,6 +121,22 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-end !important',
     marginBottom: '16px !important',
   },
+  whoVotedList: {
+    width: '100%',
+    maxHeight: 350,
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '0.3em',
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 3px rgba(0,0,0,0.1)',
+      webkitBoxShadow: 'inset 0 0 3px rgba(0,0,0,0.1)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#e7b7c9',
+      borderRadius: '0.15em',
+    },
+  },
   dailogSgmnt: {
     marginLeft: theme.spacing(3),
   },

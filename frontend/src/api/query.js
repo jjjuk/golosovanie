@@ -39,6 +39,11 @@ export const POLL = gql`
       winnerEvent {
         id
         iParticipate(id: $id)
+        votes {
+          user {
+            name
+          }
+        }
         name
         votesCount
         startTime

@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { theme, useStyles } from 'useStyles'
 
+import { useSubscription } from 'urql'
+import { NEW_VOTES } from 'api'
+
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Loading from '@material-ui/core/CircularProgress'
@@ -15,12 +18,25 @@ const FirstStage = () => {
   const classes = useStyles(theme)
   const [open, setOpen] = useState(false)
   const [ended, setEnded] = useState(false)
-  const { firstStageTime, createdAt, id, iveVoted } = useContext(PollContext)
+  const {
+    firstStageTime,
+    createdAt,
+    id,
+    iveVoted,
+    votesCount: vc,
+  } = useContext(PollContext)
   const [voted, setVoted] = useState(iveVoted)
+  const [votesCount, setVotesCount] = useState(0)
+
+  useSubscription(
+    { query: NEW_VOTES, variables: { pollId: id } },
+    (_, { newVotes }) => setVotesCount(newVotes)
+  )
 
   useEffect(() => {
     setVoted(iveVoted)
-  }, [iveVoted])
+    setVotesCount(vc)
+  }, [iveVoted, vc])
 
   const handleClick = () => {
     setOpen(true)
@@ -47,7 +63,7 @@ const FirstStage = () => {
           onCountdownEnd={handleEndCountdoun}
         />
       ) : (
-        <Loading        
+        <Loading
           color='secondary'
           className={classes.countDown}
           style={{ width: 100, height: 100 }}
@@ -56,15 +72,19 @@ const FirstStage = () => {
       <Typography
         className={classes.starterCaption}
         variant='h4'
+        align='center'
         color='secondary'
         children={
           !voted ? (
             <b>
               Vote for your event.
               <br /> Time is running out!
+              <br /> {votesCount} votes
             </b>
           ) : (
-            <b>Wait for 1st stage complete.</b>
+            <b>
+              Wait for 1st stage complete. <br /> {votesCount} votes
+            </b>
           )
         }
       />
